@@ -14,10 +14,7 @@ var soundOuch = new Audio('media/ouch.wav');
 var soundDing = new Audio('media/ding.mp3');
 var soundYay = new Audio('media/yay.wav');
 
-
-
 clickLocations = [];
-
 function logClicks(x,y) {
   clickLocations.push(
     {
@@ -38,9 +35,8 @@ function getRandomInt (min, max) {
 // pipe functions
 
 var PipeDefaults = {
-    'startX' : 500,
     'minX' : -10,
-    'dX' : -10,
+    'dX' : -5,
     'minY' : 300,
     'maxY' : 500,
     'pipeGap' : 600,
@@ -49,14 +45,15 @@ var PipeDefaults = {
     'minX' : -300,
     'width' : 150,
     'height' : 300,
-    'tolerance' : 25
+    'tolerance' : 25,
+    'start_position_a' : 1000,
+    'start_position_b' : 1700,
+    'offset' : 1300 //distance pipes jump to the right once they move off the screen to the left
 }
 
 var Pipe = function(x,dx) {
     this.image = PipeDefaults.image;
     this.top_image = PipeDefaults.top_image;
-    this.x_original = x;
-    this.dx_original = dx;
     this.x = x;
     this.dx = dx;
     this.y = getRandomInt(PipeDefaults.minY, PipeDefaults.maxY);
@@ -66,6 +63,7 @@ var Pipe = function(x,dx) {
     this.size_x = PipeDefaults.width;
     this.size_y = PipeDefaults.height;
     this.tolerance = PipeDefaults.tolerance;
+    this.offset = PipeDefaults.offset;
 
 }
 
@@ -80,7 +78,7 @@ var Pipe = function(x,dx) {
 Pipe.prototype.update = function() {
     this.x = this.x + this.dx;
     if (this.x < this.minX) {
-        this.x += 1300;
+        this.x += this.offset;
         this.y = getRandomInt(PipeDefaults.minY, PipeDefaults.maxY);
         this.topY = this.y - PipeDefaults.pipeGap;
         this.passed = 0;
@@ -263,7 +261,6 @@ Player.prototype.handleClick = function() {
         soundVroom.play();
     }
     else if (this.crashed == 1){
-        this.reset;
         gameReset();
     }
 };
@@ -292,14 +289,9 @@ var updateScore = function(player, pipe) {
 }
 
 var gameReset = function() {
-    //player.reset();
-    //backdrop.reset();
-    //for (var i=0; i < pipeArray.length; i++){
-    //    pipeArray[i].reset();
-    //}
     player = new Player();
     backdrop = new Backdrop();
-    pipeArray = [new Pipe(1000, -5), new Pipe(1700,-5)];
+    pipeArray = [new Pipe(PipeDefaults.start_position_a, PipeDefaults.dX), new Pipe(PipeDefaults.start_position_b, PipeDefaults.dX)];
 }
 
 ////////////////////////////////////////////////////////
@@ -307,6 +299,6 @@ var gameReset = function() {
 
 var player = new Player();
 var backdrop = new Backdrop();
-var pipeArray = [new Pipe(1000, -5), new Pipe(1700,-5)];
+var pipeArray = [new Pipe(PipeDefaults.start_position_a, PipeDefaults.dX), new Pipe(PipeDefaults.start_position_b, PipeDefaults.dX)];
 
 

@@ -87,8 +87,8 @@ var Engine = (function(global) {
         updateEntities(dt);
         for (var i=0; i<pipeArray.length; i++){
             if (pipeArray[i].x < 200){
-            checkCollision(player, pipeArray[i]);
-        } 
+                checkCollision(player, pipeArray[i]);
+            } 
         }
     }
 
