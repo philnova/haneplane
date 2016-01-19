@@ -22,7 +22,7 @@ function logClicks(x,y) {
       y: y
     }
   );
-  console.log('x location: ' + x + '; y location: ' + y);
+  //console.log('x location: ' + x + '; y location: ' + y);
 }
 
 
@@ -48,16 +48,19 @@ var PipeDefaults = {
     'tolerance' : 25,
     'start_position_a' : 1000,
     'start_position_b' : 1700,
-    'offset' : 1300 //distance pipes jump to the right once they move off the screen to the left
+    'offset' : 1300, //distance pipes jump to the right once they move off the screen to the left
+    'dx_difficulty_boost' : -1,
+    'gap_difficulty_boost' : -20
 }
 
 var Pipe = function(x,dx) {
+    this.gap = PipeDefaults.pipeGap;
     this.image = PipeDefaults.image;
     this.top_image = PipeDefaults.top_image;
     this.x = x;
     this.dx = dx;
     this.y = getRandomInt(PipeDefaults.minY, PipeDefaults.maxY);
-    this.topY = this.y - PipeDefaults.pipeGap;
+    this.topY = this.y - this.gap;
     this.minX = PipeDefaults.minX;
     this.passed = 0; //flag indicating whether this pipe has already been passed by the player
     this.size_x = PipeDefaults.width;
@@ -180,6 +183,7 @@ var Player = function() {
     this.size_y = PlayerDefaults.sizeY;
     this.max_y = PlayerDefaults.maxY;
     this.click_jump = PlayerDefaults.clickJump;
+    this.difficulty = 0;
 };
 
 Player.prototype.update = function() {
@@ -251,9 +255,27 @@ var gameCrash = function() {
 
 }
 
+var updateDifficulty = function(player, pipe){
+    if (player.crashed == 0) {
+        if (player.difficulty < 5) {
+        offset = player.difficulty;
+    }
+    else {
+        offset = 5;
+    }
+    pipe.dx = PipeDefaults.dX + (PipeDefaults.dx_difficulty_boost * offset);
+    pipe.gap = PipeDefaults.pipeGap + (PipeDefaults.gap_difficulty_boost * offset);
+    }
+    
+}
+
 var updateScore = function(player, pipe) {
     if (player.x > pipe.x & pipe.passed == 0) {
         player.score += 1;
+        if (player.score % 5 == 0) {
+            player.difficulty += 1;
+        }
+        //console.log(player.difficulty);
         //soundDing.play();
         soundYay.play();
         pipe.passed = 1;

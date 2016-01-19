@@ -86,6 +86,7 @@ var Engine = (function(global) {
     function update(dt) {
         updateEntities(dt);
         for (var i=0; i<pipeArray.length; i++){
+            updateDifficulty(player, pipeArray[i]);
             if (pipeArray[i].x < 200){
                 checkCollision(player, pipeArray[i]);
             } 
