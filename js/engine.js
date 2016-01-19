@@ -164,7 +164,9 @@ var Engine = (function(global) {
         'media/pipe_cropped.png',
         'media/flippedpipe_cropped.png',
         'media/happy_plane.png',
-        'media/sad_plane.png'
+        'media/sad_plane.png',
+        'media/sad_plane_bonus.png',
+        'media/happy_plane_bonus.png'
     ]);
     Resources.onReady(init);
 

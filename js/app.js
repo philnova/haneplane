@@ -14,6 +14,8 @@ var soundOuch = new Audio('media/ouch.wav');
 var soundDing = new Audio('media/ding.mp3');
 var soundYay = new Audio('media/yay.wav');
 
+soundCrash.volume = 0.1;
+
 clickLocations = [];
 function logClicks(x,y) {
   clickLocations.push(
@@ -159,6 +161,8 @@ var PlayerDefaults = {
     "acceleration" : 0.4,
     "sprite" : 'media/happy_plane.png',
     "sadSprite" : 'media/sad_plane.png',
+    "spriteBonus" : 'media/happy_plane_bonus.png',
+    "sadSpriteBonus" : 'media/sad_plane_bonus.png',
     "soundDing" : 'media/ding.mp3',
     "soundVroom" : 'media/vroom.wav',
     "soundSmash" : 'media/smash.wav',
@@ -227,10 +231,22 @@ Player.prototype.detectCollision = function(other) {
 
 Player.prototype.render = function() {
     if (this.crashed == 0){
-        ctx.drawImage(Resources.get(PlayerDefaults.sprite), this.x, this.y, this.size_x, this.size_y);
+        if (this.score < 14){
+            ctx.drawImage(Resources.get(PlayerDefaults.sprite), this.x, this.y, this.size_x, this.size_y);
+        }
+        else {
+            ctx.drawImage(Resources.get(PlayerDefaults.spriteBonus), this.x, this.y, this.size_x, this.size_y);
+        }
+        
     }
     else if (this.crashed == 1){
-        ctx.drawImage(Resources.get(PlayerDefaults.sadSprite), this.x, this.y, this.size_x, this.size_y)
+        if (this.score < 14){
+            ctx.drawImage(Resources.get(PlayerDefaults.sadSprite), this.x, this.y, this.size_x, this.size_y)
+        }
+        else {
+            ctx.drawImage(Resources.get(PlayerDefaults.sadSpriteBonus), this.x, this.y, this.size_x, this.size_y);
+        }
+        
     }
 };
 

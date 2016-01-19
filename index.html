@@ -14,9 +14,19 @@
     <script src="js/jquery.min.js"></script>
     <p id='score'>Score: 0</p>
     <p id='highscore'>High Score: 0</p>
-    <audio controls loop autoplay>
+    <audio controls loop autoplay id='backgroundMusic'>
         <source src="media/trololo.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
+    <script>
+        $(document).ready(function() {
+    // the site has now loaded, grab the video!
+    bgAudio = document.getElementById("backgroundMusic");
+    // now tweak the volume!
+    bgAudio.volume = 0.3;
+    // now, play it!
+    bgAudio.play();
+});
+    </script>
 </body>
 </html>
