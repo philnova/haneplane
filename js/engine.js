@@ -21,23 +21,17 @@ var Engine = (function(global) {
      */
     var doc = global.document,
         win = global.window,
-        //scoreCanvas = doc.createElement('canvas'),
-        //ctxS = scoreCanvas.getContext('2d'),
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
-        
         lastTime;
 
     //canvas.width = 1000;
     canvas.width = 1000;
     canvas.height = 550;
-    //scoreCanvas.width = 100;
-    //scoreCanvas.height = 200;
     ctx.font = '50px Arial';
     ctx.fillStyle = 'white';
     ctx.strokeStyle = 'black;'
     ctx.lineWidth=2.5;
-    //doc.body.appendChild(scoreCanvas);
     doc.body.appendChild(canvas);
 
     /* This function serves as the kickoff point for the game loop itself
@@ -96,7 +90,6 @@ var Engine = (function(global) {
             checkCollision(player, pipeArray[i]);
         } 
         }
-        checkCollisions();
     }
 
     /* This is called by the update function  and loops through all of the

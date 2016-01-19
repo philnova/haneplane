@@ -69,13 +69,13 @@ var Pipe = function(x,dx) {
 
 }
 
-Pipe.prototype.reset = function() {
-    this.x = this.x_original;
-    this.y = getRandomInt(PipeDefaults.minY, PipeDefaults.maxY);
-    this.topY = this.y - PipeDefaults.pipeGap;
-    this.passed = 0;
-    this.dx = this.dx_original;
-}
+// Pipe.prototype.reset = function() {
+//     this.x = this.x_original;
+//     this.y = getRandomInt(PipeDefaults.minY, PipeDefaults.maxY);
+//     this.topY = this.y - PipeDefaults.pipeGap;
+//     this.passed = 0;
+//     this.dx = this.dx_original;
+// }
 
 Pipe.prototype.update = function() {
     this.x = this.x + this.dx;
@@ -98,33 +98,21 @@ Pipe.prototype.stop = function() {
 
 var checkCollision = function(player, pipe) {
     //is player x overlapping the pipe's x?
-    if (player.crashed == 0 & player.x + player.size_x >= pipe.x & player.x <= pipe.x + pipe.size_x) {
+    if (player.x + player.size_x >= pipe.x & player.x <= pipe.x + pipe.size_x) {
         //is the player's y overlapping the bottom pipe?
         if (player.y + player.size_y - pipe.tolerance >= pipe.y){
             //crash with bottom pipe
-            player.pipeCrashed = 1;
-            player.crash();
-            gameCrash();
-            soundOuch.play();
+            player.pipeCrash();
         }
         else if (player.y + pipe.tolerance <= pipe.topY + pipe.size_y){
-            player.pipeCrashed = 1;
-            player.crash();
-            gameCrash();
-            soundOuch.play();
+            player.pipeCrash();
 
         }
     }
 
-    
-
-    
         //console.log('not overlapping');
     return 0;
-    
-
-    
-
+ 
     //is the player's y overlapping the top pipe?
 }
 
@@ -149,10 +137,10 @@ var Backdrop = function() {
     this.y = 0;
 }
 
-Backdrop.prototype.reset = function() {
-    this.x = BackdropDefaults.startX;
-    this.dx = BackdropDefaults.dx;
-}
+// Backdrop.prototype.reset = function() {
+//     this.x = BackdropDefaults.startX;
+//     this.dx = BackdropDefaults.dx;
+// }
 
 Backdrop.prototype.update = function() {
     this.x = this.x + this.dx;
@@ -211,36 +199,49 @@ var Player = function() {
 
 Player.prototype.update = function() {
     this.y = this.y + this.velocity;
-    if (this.y > this.max_y & this.groundCrashed == 0) {
-        player.groundCrashed = 1;
-        player.crash();
-        gameCrash();
-        soundCrash.play();
-        this.velocity = 0;
-        this.acceleration = 0;
-        
+    if (this.y > this.max_y) {
+        this.groundCrash();
     }
 
     this.velocity = this.velocity + this.acceleration;
 };
 
+Player.prototype.pipeCrash = function() {
+    if (this.pipeCrashed == 0){
+        this.crash();
+        this.pipeCrashed = 1;
+        gameCrash();
+        soundOuch.play();
+    }
+}
+
+Player.prototype.groundCrash = function() {
+    if (this.groundCrashed == 0){
+        this.groundCrashed = 1;
+        this.crash();
+        gameCrash();
+        soundCrash.play();
+        this.velocity = 0;
+        this.acceleration = 0;
+    }
+}
 
 
 Player.prototype.crash = function() {
     this.crashed = 1;
 }
 
-Player.prototype.reset = function() {
-    this.x = PlayerDefaults.startX;
-    this.y = PlayerDefaults.startY;
-    this.moved = 0;
-    this.crashed = 0;
-    this.groundCrashed = 0;
-    this.pipeCrashed = 0;
-    this.velocity = PlayerDefaults.velocity;
-    this.acceleration = PlayerDefaults.acceleration;
-    this.score = 0;
-};
+// Player.prototype.reset = function() {
+//     this.x = PlayerDefaults.startX;
+//     this.y = PlayerDefaults.startY;
+//     this.moved = 0;
+//     this.crashed = 0;
+//     this.groundCrashed = 0;
+//     this.pipeCrashed = 0;
+//     this.velocity = PlayerDefaults.velocity;
+//     this.acceleration = PlayerDefaults.acceleration;
+//     this.score = 0;
+// };
 
 
 Player.prototype.detectCollision = function(other) {
@@ -277,31 +278,6 @@ var gameCrash = function() {
     }
 
 }
-
-
-var xDistance = function(obj1, obj2) {
-    return Math.abs(obj1.x - obj2.x);
-}
-
-var yDistance = function(obj1, obj2) {
-    return Math.abs(obj1.y - obj2.y);
-}
-
-
-detectCollisions = function(obj1, obj2) {
-    if (obj1.y === obj2.y & Math.abs(obj1.x - obj2.x) < (obj1.size_x + obj2.size_x)/2.0) {
-        //console.log('collision!');
-        return 1;
-    }
-    else {
-        return 0;
-    }
-}
-
-var checkCollisions = function(player, pipe) {
-    
-};
-
 
 var updateScore = function(player, pipe) {
     if (player.x > pipe.x & pipe.passed == 0) {
