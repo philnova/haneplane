@@ -67,13 +67,6 @@ var Pipe = function(x,dx) {
 
 }
 
-// Pipe.prototype.reset = function() {
-//     this.x = this.x_original;
-//     this.y = getRandomInt(PipeDefaults.minY, PipeDefaults.maxY);
-//     this.topY = this.y - PipeDefaults.pipeGap;
-//     this.passed = 0;
-//     this.dx = this.dx_original;
-// }
 
 Pipe.prototype.update = function() {
     this.x = this.x + this.dx;
@@ -102,16 +95,14 @@ var checkCollision = function(player, pipe) {
             //crash with bottom pipe
             player.pipeCrash();
         }
+        //is the player's y overlapping the top pipe?
         else if (player.y + pipe.tolerance <= pipe.topY + pipe.size_y){
+            //crash with top pipe
             player.pipeCrash();
-
         }
     }
-
-        //console.log('not overlapping');
     return 0;
  
-    //is the player's y overlapping the top pipe?
 }
 
 ////////////////////////////////////
@@ -135,10 +126,6 @@ var Backdrop = function() {
     this.y = 0;
 }
 
-// Backdrop.prototype.reset = function() {
-//     this.x = BackdropDefaults.startX;
-//     this.dx = BackdropDefaults.dx;
-// }
 
 Backdrop.prototype.update = function() {
     this.x = this.x + this.dx;
@@ -228,18 +215,6 @@ Player.prototype.groundCrash = function() {
 Player.prototype.crash = function() {
     this.crashed = 1;
 }
-
-// Player.prototype.reset = function() {
-//     this.x = PlayerDefaults.startX;
-//     this.y = PlayerDefaults.startY;
-//     this.moved = 0;
-//     this.crashed = 0;
-//     this.groundCrashed = 0;
-//     this.pipeCrashed = 0;
-//     this.velocity = PlayerDefaults.velocity;
-//     this.acceleration = PlayerDefaults.acceleration;
-//     this.score = 0;
-// };
 
 
 Player.prototype.detectCollision = function(other) {
