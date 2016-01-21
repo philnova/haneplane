@@ -28,9 +28,11 @@ var Engine = (function(global) {
     //canvas.width = 1000;
     canvas.width = 1000;
     canvas.height = 550;
+    canvas.id = "canvas-id";
     ctx.font = '50px Arial';
     ctx.fillStyle = 'white';
     ctx.strokeStyle = 'black;'
+
     ctx.lineWidth=2.5;
     doc.body.appendChild(canvas);
 
@@ -108,8 +110,8 @@ var Engine = (function(global) {
             pipeArray[i].update()
             updateScore(player, pipeArray[i])
         }
-        $('#score').text('Score: '+player.score)
-        $('#highscore').text('High Score: '+high_score)
+        $('#score').text(player_name+"'s Score: "+player.score)
+        $('#highscore').text(player_name+"'s High Score: "+high_score)
 
     }
 
@@ -141,8 +143,20 @@ var Engine = (function(global) {
         }
 
         if (player.crashed == 1){
+            ctx.font = '50px Arial';
+            
+            ctx.lineWidth=2.5;
             ctx.fillText('You Crashed! Click to Restart', 175, 250);
             ctx.strokeText('You Crashed! Click to Restart', 175, 250);
+        }
+
+        if (first_start == 1){
+            ctx.font = '100px Arial';
+            ctx.fillText('HanePlane!', 250, 250);
+            ctx.strokeText('HanePlane!', 250, 250)
+            ctx.font = '50px Arial';
+            ctx.fillText('Click to start', 250, 350);
+            ctx.strokeText('Click to start', 250, 350);
         }
 
     }

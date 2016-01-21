@@ -1,12 +1,62 @@
 //refactor for responsive design??
 
-$(document).click(function(loc) {
-  var x = loc.pageX;
-  var y = loc.pageY;
+first_start = 1; //pause game until player clicks screen for the first time
 
-  logClicks(x,y);
-  player.handleClick();
+var player_name="Cool Guy";
+
+$(document).ready(function() {
+
+
+
+    $('canvas').click(function(loc) {
+      var x = loc.pageX;
+      var y = loc.pageY;
+      logClicks(x,y);
+      if (first_start == 1) {
+        first_start = 0;
+        player = new Player();
+        pipeArray = [new Pipe(PipeDefaults.start_position_a, PipeDefaults.dX), new Pipe(PipeDefaults.start_position_b, PipeDefaults.dX)];
+
+      }
+      else {
+        player.handleClick();
+        }
+    });
+})
+
+$(document).ready(function() {
+    $('#hiscoreButton').click(function(){
+        var posting = $.post("js/query_all.php", function(result){
+        var $hiscore_header = $('#hiscore_box');
+        console.log(result);
+        $hiscore_header.html(result);
+    });
+        $('#hiscoreModal').modal('show');
+    })
+})
+
+$(document).ready(function() {
+    $('#usernameButton').click(function(){
+        $('#usernameModal').modal('show');
+    })
+})
+
+jQuery(document).ready(function($) {
+
+    // Run when enter button is clicked
+    $('#modalUsernameEnter').click(function(){
+
+        player_name = $('input[name=player_name_input]').val(); //avoid SQL injection
+        
+        if (player_name.length < 1){
+            player_name = "Not Cool Guy";
+        }
+
+        console.log(player_name);
+    })
 });
+
+
 
 var soundCrash = new Audio('media/smash.wav');
 var soundVroom = new Audio('media/vroom.wav');
@@ -171,6 +221,32 @@ var PlayerDefaults = {
     "clickJump" : -7.5
 }
 
+var DemoPlayer = function() {
+    this.x = PlayerDefaults.X;
+    this.y = PlayerDefaults.startY;
+    this.size_x = PlayerDefaults.sizeX;
+    this.size_y = PlayerDefaults.sizeY;
+    this.minY = 48;
+    this.score = 0;
+    this.maxY = 100;
+    this.direction = 1;
+}
+
+DemoPlayer.prototype.update = function() {
+    if (this.y == this.minY || this.y == this.maxY){
+        this.direction = this.direction * -1;
+        this.y += this.direction;
+    }
+    else {
+        this.y += this.direction;
+    }
+}
+
+DemoPlayer.prototype.render = function() {
+    ctx.drawImage(Resources.get(PlayerDefaults.sprite), this.x, this.y, this.size_x, this.size_y);
+}
+
+
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player = function() {
@@ -221,6 +297,17 @@ Player.prototype.groundCrash = function() {
 
 
 Player.prototype.crash = function() {
+    var final_score = this.score;
+
+    console.log(final_score);
+    var posting = $.post("js/store_hiscore.php", {username: player_name, score: final_score}, function(result){
+        console.log(result);
+    });
+
+    posting.done(function(data){
+        console.log(data);
+    })
+
     this.crashed = 1;
 }
 
@@ -272,7 +359,7 @@ var gameCrash = function() {
 }
 
 var updateDifficulty = function(player, pipe){
-    if (player.crashed == 0) {
+    if (player.crashed == 0 & first_start == 0) {
         if (player.difficulty < 5) {
         offset = player.difficulty;
     }
@@ -310,8 +397,11 @@ var gameReset = function() {
 ////////////////////////////////////////////////////////
 // instantiate objects
 
-var player = new Player();
-var backdrop = new Backdrop();
-var pipeArray = [new Pipe(PipeDefaults.start_position_a, PipeDefaults.dX), new Pipe(PipeDefaults.start_position_b, PipeDefaults.dX)];
+var player = new DemoPlayer();
 
+var backdrop = new Backdrop();
+
+var pipeArray = [new Pipe(PipeDefaults.start_position_a, 0), new Pipe(PipeDefaults.start_position_b, 0)];
+
+//var pipeArray = [new Pipe(PipeDefaults.start_position_a, PipeDefaults.dX), new Pipe(PipeDefaults.start_position_b, PipeDefaults.dX)];
 
